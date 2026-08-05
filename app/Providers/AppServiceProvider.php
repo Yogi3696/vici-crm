@@ -23,6 +23,44 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Illuminate\Support\Facades\Blade::directive('vite', function ($expression) {
+            return "<?php
+                \$assets = $expression;
+                if (!is_array(\$assets)) {
+                    \$assets = [\$assets];
+                }
+                \$isDev = file_exists(public_path('hot'));
+                if (\$isDev) {
+                    \$url = rtrim(file_get_contents(public_path('hot')));
+                    echo '<script type=\"module\" src=\"'.\$url.'/@vite/client\"></script>';
+                    foreach (\$assets as \$asset) {
+                        if (substr(\$asset, -4) === '.css') {
+                            echo '<link rel=\"stylesheet\" href=\"'.\$url.'/'.\$asset.'\">';
+                        } else {
+                            echo '<script type=\"module\" src=\"'.\$url.'/'.\$asset.'\"></script>';
+                        }
+                    }
+                } else {
+                    \$manifestPath = public_path('build/manifest.json');
+                    if (file_exists(\$manifestPath)) {
+                        \$manifest = json_decode(file_get_contents(\$manifestPath), true);
+                        foreach (\$assets as \$asset) {
+                            if (isset(\$manifest[\$asset])) {
+                                if (substr(\$asset, -4) === '.css') {
+                                    echo '<link rel=\"stylesheet\" href=\"/build/'.\$manifest[\$asset]['file'].'\">';
+                                } else {
+                                    echo '<script type=\"module\" src=\"/build/'.\$manifest[\$asset]['file'].'\"></script>';
+                                    if (isset(\$manifest[\$asset]['css'])) {
+                                        foreach (\$manifest[\$asset]['css'] as \$css) {
+                                            echo '<link rel=\"stylesheet\" href=\"/build/'.\$css.'\">';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ?>";
+        });
     }
 }
