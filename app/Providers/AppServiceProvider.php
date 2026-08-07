@@ -30,11 +30,14 @@ class AppServiceProvider extends ServiceProvider
                     \$assets = [\$assets];
                 }
                 \$isDev = file_exists(public_path('hot'));
+                \$isStyle = function (\$path) {
+                    return (bool) preg_match('/\.(css|scss|sass|less|styl)\$/i', \$path);
+                };
                 if (\$isDev) {
                     \$url = rtrim(file_get_contents(public_path('hot')));
                     echo '<script type=\"module\" src=\"'.\$url.'/@vite/client\"></script>';
                     foreach (\$assets as \$asset) {
-                        if (substr(\$asset, -4) === '.css') {
+                        if (\$isStyle(\$asset)) {
                             echo '<link rel=\"stylesheet\" href=\"'.\$url.'/'.\$asset.'\">';
                         } else {
                             echo '<script type=\"module\" src=\"'.\$url.'/'.\$asset.'\"></script>';
@@ -46,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
                         \$manifest = json_decode(file_get_contents(\$manifestPath), true);
                         foreach (\$assets as \$asset) {
                             if (isset(\$manifest[\$asset])) {
-                                if (substr(\$asset, -4) === '.css') {
+                                if (\$isStyle(\$manifest[\$asset]['file'])) {
                                     echo '<link rel=\"stylesheet\" href=\"/build/'.\$manifest[\$asset]['file'].'\">';
                                 } else {
                                     echo '<script type=\"module\" src=\"/build/'.\$manifest[\$asset]['file'].'\"></script>';
