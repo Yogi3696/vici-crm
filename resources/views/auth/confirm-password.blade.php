@@ -2,7 +2,7 @@
     <x-auth-card :title="__('Confirm password')" :subtitle="__('This is a secure area of the application')">
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="auth-logo" style="fill:currentColor" />
+                <x-application-logo class="auth-logo" />
             </a>
         </x-slot>
 

@@ -2,7 +2,7 @@
     <x-auth-card :title="__('Create an account')" :subtitle="__('Get started in just a few seconds')">
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="auth-logo" style="fill:currentColor" />
+                <x-application-logo class="auth-logo" />
             </a>
         </x-slot>
 

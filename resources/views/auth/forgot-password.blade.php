@@ -2,7 +2,7 @@
     <x-auth-card :title="__('Forgot password?')" :subtitle="__('We will email you a link to reset it')">
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="auth-logo" style="fill:currentColor" />
+                <x-application-logo class="auth-logo" />
             </a>
         </x-slot>
 

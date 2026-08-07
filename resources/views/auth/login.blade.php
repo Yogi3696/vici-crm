@@ -2,7 +2,7 @@
     <x-auth-card :title="__('Welcome back')" :subtitle="__('Sign in to continue to your dashboard')">
         <x-slot name="logo">
             <a href="/">
-                <x-application-logo class="auth-logo" style="fill:currentColor" />
+                <x-application-logo class="auth-logo" />
             </a>
         </x-slot>
 

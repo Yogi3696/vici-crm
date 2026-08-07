@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-navy navbar-dark">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
-            <x-application-logo class="d-block" style="width:1.75rem;height:1.75rem;fill:currentColor" />
+            <x-application-logo class="d-block" style="width:2rem;height:auto" />
             {{ config('app.name', 'Laravel') }}
         </a>
 

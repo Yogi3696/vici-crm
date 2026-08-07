@@ -2,6 +2,7 @@
 
 <input
     {{ $disabled ? 'disabled' : '' }}
+    @if ($name) name="{{ $name }}" @endif
     {{ $attributes->merge([
         'class' => 'form-control' . ($name && $errors->has($name) ? ' is-invalid' : ''),
     ]) }}
