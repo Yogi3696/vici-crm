@@ -2,7 +2,7 @@
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
             <x-application-logo class="d-block" style="width:2rem;height:auto" />
-            {{ config('app.name', 'Laravel') }}
+            {{ config('app.name', 'ViciCRM') }}
         </a>
 
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"

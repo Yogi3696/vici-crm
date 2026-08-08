@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ isset($title) ? $title . ' - ' : '' }}{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ isset($title) ? $title . ' - ' : '' }}{{ config('app.name', 'ViciCRM') }}</title>
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -35,7 +35,7 @@
 
     <footer class="app-footer py-3">
         <div class="container d-flex justify-content-between flex-wrap gap-2">
-            <span>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}</span>
+            <span>&copy; {{ date('Y') }} {{ config('app.name', 'ViciCRM') }}</span>
             <span>{{ __('All rights reserved.') }}</span>
         </div>
     </footer>
