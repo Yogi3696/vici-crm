@@ -13,15 +13,15 @@
     @include('layouts.navigation')
 
     @isset($header)
-        <div class="page-heading py-3">
-            <div class="container">
-                <h1>{{ $header }}</h1>
+        <div class="page-heading py-2">
+            <div class="container-fluid px-4">
+                <h4 class="mb-0">{{ $header }}</h4>
             </div>
         </div>
     @endisset
 
-    <main class="flex-grow-1 py-4">
-        <div class="container">
+    <main class="flex-grow-1 py-3">
+        <div class="container-fluid px-4">
             @if (session('status'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('status') }}
@@ -33,8 +33,8 @@
         </div>
     </main>
 
-    <footer class="app-footer py-3">
-        <div class="container d-flex justify-content-between flex-wrap gap-2">
+    <footer class="app-footer py-2">
+        <div class="container-fluid px-4 d-flex justify-content-between flex-wrap gap-2">
             <span>&copy; {{ date('Y') }} {{ config('app.name', 'ViciCRM') }}</span>
             <span>{{ __('All rights reserved.') }}</span>
         </div>

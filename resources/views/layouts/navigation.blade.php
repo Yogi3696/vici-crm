@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-md navbar-navy navbar-dark">
-    <div class="container">
+<nav class="navbar navbar-expand-md navbar-navy navbar-dark py-1">
+    <div class="container-fluid px-4">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
             <x-application-logo class="d-block" style="width:2rem;height:auto" />
             {{ config('app.name', 'ViciCRM') }}
