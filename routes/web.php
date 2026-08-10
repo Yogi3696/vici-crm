@@ -24,6 +24,9 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
+    Route::get('/campaigns', [\App\Http\Controllers\CampaignController::class, 'index'])->name('campaigns.index');
+
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
+

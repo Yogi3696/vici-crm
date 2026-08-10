@@ -19,6 +19,12 @@
                         <i class="bi bi-speedometer2 me-1"></i>{{ __('Dashboard') }}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('campaigns.*') ? 'active' : '' }}"
+                       href="{{ route('campaigns.index') }}">
+                        <i class="bi bi-megaphone me-1"></i>{{ __('Campaigns') }}
+                    </a>
+                </li>
             </ul>
 
             <ul class="navbar-nav">
