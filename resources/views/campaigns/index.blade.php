@@ -1,9 +1,9 @@
 <x-app-layout>
-    <div class="container-fluid px-4 py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">{{ __('Campaigns') }}</h2>
-        </div>
+    <x-slot name="header">
+        {{ __('Campaigns') }}
+    </x-slot>
 
+    <div class="container-fluid px-4 py-4">
         <div class="card shadow-sm border border-primary rounded-4 overflow-hidden">
             <div class="card-body p-0">
                 <div class="table-responsive">
