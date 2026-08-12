@@ -19,11 +19,18 @@
                         <i class="bi bi-speedometer2 me-1"></i>{{ __('Dashboard') }}
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('campaigns.*') ? 'active' : '' }}"
-                       href="{{ route('campaigns.index') }}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('campaigns.*') || request()->routeIs('inbound-groups.*') ? 'active' : '' }}" href="#" id="campaignsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-megaphone me-1"></i>{{ __('Campaigns') }}
                     </a>
+                    <ul class="dropdown-menu" aria-labelledby="campaignsDropdown">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('campaigns.*') ? 'active' : '' }}" href="{{ route('campaigns.index') }}">{{ __('Campaigns List') }}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('inbound-groups.*') ? 'active' : '' }}" href="{{ route('inbound-groups.index') }}">{{ __('Inbound Groups') }}</a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
 
