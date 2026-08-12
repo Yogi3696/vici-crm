@@ -16,40 +16,56 @@
             </form>
         </div>
 
-        <div class="card shadow-sm border border-primary rounded-4 overflow-hidden">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-primary border-bottom border-primary">
+                    <table class="table table-hover table-borderless align-middle mb-0">
+                        <thead class="bg-light text-secondary border-bottom">
                             <tr>
-                                <th class="py-3 ps-4 fw-semibold">ID</th>
-                                <th class="py-3 fw-semibold">Name</th>
-                                <th class="py-3 fw-semibold">Status</th>
-                                <th class="py-3 fw-semibold">Active</th>
-                                <th class="py-3 pe-4 fw-semibold">Description</th>
+                                <th class="py-3 ps-4 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">ID</th>
+                                <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Name</th>
+                                <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Status</th>
+                                <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($campaigns as $campaign)
-                                <tr>
-                                    <td class="ps-4 fw-medium text-secondary">{{ $campaign->campaign_id }}</td>
-                                    <td class="fw-medium text-dark">{{ $campaign->campaign_name }}</td>
+                                <tr class="border-bottom" style="transition: background-color 0.2s ease;">
+                                    <td class="ps-4 fw-medium text-secondary">
+                                        <span class="text-muted">#</span>{{ $campaign->campaign_id }}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center py-2">
+                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-megaphone"></i>
+                                            </div>
+                                            <div>
+                                                <span class="d-block fw-bold text-dark">{{ $campaign->campaign_name }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>
                                         @if($campaign->active == 'Y')
-                                            <span class="badge bg-success-subtle text-success border border-success rounded-pill px-3 py-2">Active</span>
+                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2 fw-semibold">Active</span>
                                         @else
-                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary rounded-pill px-3 py-2">Inactive</span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-2 fw-semibold">Inactive</span>
                                         @endif
                                     </td>
-                                    <td><span class="fw-medium">{{ $campaign->active }}</span></td>
-                                    <td class="pe-4 text-muted">{{ $campaign->campaign_description ?: '-' }}</td>
+                                    <td class="pe-4 text-muted">
+                                        <p class="mb-0 text-truncate" style="max-width: 250px;" title="{{ $campaign->campaign_description }}">
+                                            {{ $campaign->campaign_description ?: 'No description available' }}
+                                        </p>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-5 text-muted">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <i class="bi bi-inbox fs-1 mb-2 text-secondary"></i>
-                                            <span class="fw-medium">No campaigns found.</span>
+                                    <td colspan="4" class="text-center py-5">
+                                        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                                <i class="bi bi-inbox fs-1 text-secondary"></i>
+                                            </div>
+                                            <h5 class="fw-bold text-dark mb-1">No campaigns found</h5>
+                                            <p class="mb-0 small">Try adjusting your search query.</p>
                                         </div>
                                     </td>
                                 </tr>
