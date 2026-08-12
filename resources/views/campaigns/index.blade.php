@@ -4,6 +4,18 @@
     </x-slot>
 
     <div class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-end mb-3">
+            <form action="{{ route('campaigns.index') }}" method="GET" class="d-flex" style="max-width: 400px; width: 100%;">
+                <div class="input-group shadow-sm">
+                    <input type="text" name="search" class="form-control border-primary" placeholder="Search campaigns..." value="{{ request('search') }}">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                    @if(request('search'))
+                        <a href="{{ route('campaigns.index') }}" class="btn btn-outline-danger">Clear</a>
+                    @endif
+                </div>
+            </form>
+        </div>
+
         <div class="card shadow-sm border border-primary rounded-4 overflow-hidden">
             <div class="card-body p-0">
                 <div class="table-responsive">
