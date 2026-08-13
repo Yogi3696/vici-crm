@@ -213,6 +213,204 @@ body {
     }
 }
 
+// Toolbar (search + filters above a table) ----------------------------------
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    .toolbar-search {
+        flex: 1 1 16rem;
+        max-width: 22rem;
+    }
+
+    .toolbar-filter {
+        flex: 0 1 14rem;
+    }
+
+    .toolbar-spacer {
+        flex: 1 1 auto;
+    }
+
+    .toolbar-count {
+        font-size: 0.825rem;
+        color: $secondary;
+        white-space: nowrap;
+    }
+}
+
+// Data tables ---------------------------------------------------------------
+.card-table {
+    overflow: hidden;
+
+    .card-body {
+        padding: 0;
+    }
+
+    .table {
+        margin-bottom: 0;
+
+        > thead th {
+            background-color: #fbfcfd;
+            border-bottom: 1px solid rgba($navy-900, 0.1);
+            padding: 0.7rem 0.75rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: $secondary;
+            white-space: nowrap;
+        }
+
+        > tbody td {
+            padding: 0.7rem 0.75rem;
+            border-bottom: 1px solid rgba($navy-900, 0.06);
+            vertical-align: middle;
+        }
+
+        > tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        > thead th:first-child,
+        > tbody td:first-child {
+            padding-left: 1.25rem;
+        }
+
+        > thead th:last-child,
+        > tbody td:last-child {
+            padding-right: 1.25rem;
+        }
+    }
+
+    .card-footer {
+        background-color: #fff;
+        border-top: 1px solid rgba($navy-900, 0.08);
+        padding: 0.6rem 1.25rem;
+
+        .pagination {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Primary cell: name + monospace id underneath
+.cell-title {
+    font-weight: 600;
+    color: $navy-800;
+    line-height: 1.3;
+}
+
+.cell-id {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.75rem;
+    color: $secondary;
+}
+
+// Status + tag pills --------------------------------------------------------
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.pill-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex: none;
+}
+
+.pill-active {
+    background-color: rgba(#16a34a, 0.1);
+    color: #15803d;
+}
+
+.pill-inactive {
+    background-color: rgba($navy-900, 0.06);
+    color: $secondary;
+}
+
+// Clickable tag referencing a related record
+.pill-tag {
+    background-color: $navy-100;
+    color: $navy-700;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+
+    &:hover,
+    &:focus {
+        background-color: darken($navy-100, 6%);
+        color: $navy-800;
+    }
+}
+
+.pill-muted {
+    color: $secondary;
+    font-size: 0.8rem;
+}
+
+// Empty state ---------------------------------------------------------------
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: $secondary;
+
+    .empty-icon {
+        width: 3rem;
+        height: 3rem;
+        margin: 0 auto 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: $navy-100;
+        color: $navy-700;
+        font-size: 1.25rem;
+    }
+
+    .empty-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: $navy-800;
+        margin-bottom: 0.15rem;
+    }
+
+    .empty-text {
+        font-size: 0.825rem;
+        margin-bottom: 0;
+    }
+}
+
+// Pagination ----------------------------------------------------------------
+.pagination-summary {
+    font-size: 0.8rem;
+    color: $secondary;
+}
+
+.pagination {
+    --bs-pagination-color: #{$navy-700};
+    --bs-pagination-border-color: #d5dce6;
+    --bs-pagination-hover-color: #{$navy-900};
+    --bs-pagination-hover-bg: #{$navy-100};
+    --bs-pagination-hover-border-color: #d5dce6;
+    --bs-pagination-focus-color: #{$navy-900};
+    --bs-pagination-focus-bg: #{$navy-100};
+    --bs-pagination-active-bg: #{$navy-700};
+    --bs-pagination-active-border-color: #{$navy-700};
+    --bs-pagination-disabled-color: #{rgba($secondary, 0.55)};
+    --bs-pagination-disabled-border-color: #e5eaf1;
+}
+
 // Footer --------------------------------------------------------------------
 .app-footer {
     border-top: 1px solid rgba($navy-900, 0.08);

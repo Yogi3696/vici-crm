@@ -23,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // The UI is Bootstrap 5; the default paginator emits Tailwind markup.
+        // Laravel 8 only bundles Bootstrap 4 views, so use the local BS5 view.
+        \Illuminate\Pagination\Paginator::defaultView('pagination.bootstrap-5');
+        \Illuminate\Pagination\Paginator::defaultSimpleView('pagination.simple-bootstrap-5');
+
         \Illuminate\Support\Facades\Blade::directive('vite', function ($expression) {
             return "<?php
                 \$assets = $expression;
