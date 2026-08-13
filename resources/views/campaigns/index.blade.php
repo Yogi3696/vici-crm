@@ -25,6 +25,7 @@
                                 <th class="py-3 ps-4 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">ID</th>
                                 <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Name</th>
                                 <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Status</th>
+                                <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Inbound Groups</th>
                                 <th class="py-3 fw-semibold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">Description</th>
                             </tr>
                         </thead>
@@ -51,6 +52,17 @@
                                             <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-2 fw-semibold">Inactive</span>
                                         @endif
                                     </td>
+                                    <td>
+                                        @php $groupCount = count($campaign->inbound_group_ids); @endphp
+                                        @if($groupCount)
+                                            <a href="{{ route('inbound-groups.index', ['campaign_id' => $campaign->campaign_id]) }}"
+                                               class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-3 py-2 fw-semibold text-decoration-none">
+                                                <i class="bi bi-telephone-inbound me-1"></i>{{ $groupCount }}
+                                            </a>
+                                        @else
+                                            <span class="text-muted small">None</span>
+                                        @endif
+                                    </td>
                                     <td class="pe-4 text-muted">
                                         <p class="mb-0 text-truncate" style="max-width: 250px;" title="{{ $campaign->campaign_description }}">
                                             {{ $campaign->campaign_description ?: 'No description available' }}
@@ -59,7 +71,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-5">
+                                    <td colspan="5" class="text-center py-5">
                                         <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
                                             <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                                                 <i class="bi bi-inbox fs-1 text-secondary"></i>
