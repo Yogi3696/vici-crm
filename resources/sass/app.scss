@@ -248,9 +248,50 @@ body {
 .form-control,
 .form-select {
     border-color: #d5dce6;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover:not(:disabled):not([readonly]) {
+        border-color: #b9c4d4;
+    }
 
     &:focus {
         border-color: $navy-500;
+    }
+}
+
+// A search field is an icon addon plus an input, but it should read and
+// behave as a single control: Bootstrap's focus ring would otherwise wrap
+// only the input half and leave the icon's border grey beside it.
+.input-group-search {
+    border: 1px solid #d5dce6;
+    border-radius: $border-radius;
+    background-color: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+        border-color: #b9c4d4;
+    }
+
+    // :focus-within lifts the state from the inner input up to the wrapper.
+    &:focus-within {
+        border-color: $navy-500;
+        box-shadow: 0 0 0 0.2rem rgba($navy-700, $input-btn-focus-color-opacity);
+    }
+
+    .input-group-text,
+    .form-control {
+        border: 0;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .input-group-text {
+        padding-right: 0.35rem;
+        color: $secondary;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
     }
 }
 

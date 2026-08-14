@@ -9,11 +9,11 @@
 
     <form action="{{ route('leads.index') }}" method="GET" class="toolbar">
         <div class="toolbar-search">
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0 text-secondary">
+            <div class="input-group input-group-search">
+                <span class="input-group-text">
                     <i class="bi bi-search"></i>
                 </span>
-                <input type="text" name="search" class="form-control border-start-0 ps-0"
+                <input type="text" name="search" class="form-control ps-0"
                        placeholder="{{ __('Name, phone or email...') }}" value="{{ $search }}">
             </div>
         </div>
