@@ -3,6 +3,10 @@
         {{ __('Inbound Groups') }}
     </x-slot>
 
+    <x-slot name="subheader">
+        {{ __('Inbound queues and the campaigns that route to them.') }}
+    </x-slot>
+
     <form action="{{ route('inbound-groups.index') }}" method="GET" class="toolbar">
         <div class="toolbar-search">
             <div class="input-group">

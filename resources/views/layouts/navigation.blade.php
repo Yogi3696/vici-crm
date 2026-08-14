@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-navy navbar-dark sticky-top">
     <div class="container-fluid px-4">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
-            <x-application-logo class="d-block" style="width:2rem;height:auto" />
-            {{ config('app.name', 'ViciCRM') }}
+        <a class="navbar-brand" href="{{ route('dashboard') }}">
+            <x-application-logo />
+            <span>{{ config('app.name', 'ViciCRM') }}</span>
         </a>
 
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
@@ -12,7 +12,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="primaryNav">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
                        href="{{ route('dashboard') }}">

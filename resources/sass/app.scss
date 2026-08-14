@@ -74,17 +74,39 @@ body {
 // Navbar --------------------------------------------------------------------
 .navbar-navy {
     background-color: $navy-900;
+    padding-block: 0;
+    min-height: 3.5rem;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
 
     .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin-right: 1.5rem;
+        padding-block: 0;
         color: #fff;
+        font-size: 1rem;
         font-weight: 700;
         letter-spacing: 0.02em;
+        line-height: 1;
+
+        // The logo artwork is wider than it is tall, so pin the height and let
+        // the width follow rather than squashing it into a square.
+        svg {
+            height: 1.6rem;
+            width: auto;
+            flex: none;
+        }
     }
 
-    .nav-link {
+    // Give links a fixed height so hover and active fills are equal blocks
+    // rather than boxes that hug each label's text.
+    .navbar-nav .nav-link {
+        display: flex;
+        align-items: center;
         color: rgba(255, 255, 255, 0.72);
         font-weight: 500;
-        padding-inline: 0.9rem;
+        padding-inline: 0.75rem;
         border-radius: $border-radius-sm;
 
         &:hover,
@@ -99,9 +121,75 @@ body {
         }
     }
 
+    .navbar-nav {
+        gap: 0.15rem;
+        align-items: stretch;
+    }
+
+    // Match the caret colour to the label instead of Bootstrap's default.
+    .dropdown-toggle::after {
+        margin-left: 0.4rem;
+        opacity: 0.7;
+    }
+
+    .navbar-toggler {
+        padding: 0.35rem 0.5rem;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
     .dropdown-menu {
         border: 1px solid rgba($navy-900, 0.1);
+        border-radius: $border-radius;
+        padding-block: 0.35rem;
         box-shadow: 0 8px 24px rgba($navy-900, 0.14);
+
+        .dropdown-item {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+
+            &.active,
+            &:active {
+                background-color: $navy-100;
+                color: $navy-800;
+            }
+        }
+    }
+
+    // Collapsed menu: nav-links become full-width rows with breathing room.
+    @include media-breakpoint-down(md) {
+        .navbar-collapse {
+            padding-bottom: 0.75rem;
+        }
+
+        .navbar-nav .nav-link {
+            padding-block: 0.5rem;
+        }
+
+        .dropdown-menu {
+            background-color: rgba(255, 255, 255, 0.06);
+            border: 0;
+            box-shadow: none;
+            margin-left: 0.75rem;
+
+            .dropdown-item {
+                color: rgba(255, 255, 255, 0.78);
+
+                &:hover,
+                &:focus {
+                    background-color: rgba(255, 255, 255, 0.08);
+                    color: #fff;
+                }
+
+                &.active {
+                    background-color: rgba(255, 255, 255, 0.14);
+                    color: #fff;
+                }
+            }
+        }
     }
 }
 
@@ -110,11 +198,43 @@ body {
     background-color: #fff;
     border-bottom: 1px solid rgba($navy-900, 0.08);
 
+    // Baseline-align the title with any actions sitting beside it, and keep the
+    // strip a predictable height whether or not actions or a subtitle exist.
+    .page-heading-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
+        min-height: 3.5rem;
+        padding-block: 0.75rem;
+    }
+
+    .page-heading-text {
+        min-width: 0;
+    }
+
     h1 {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
         font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
         color: $navy-800;
         margin: 0;
+    }
+
+    .page-subheading {
+        margin: 0.15rem 0 0;
+        font-size: 0.825rem;
+        color: $secondary;
+    }
+
+    .page-heading-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
     }
 }
 

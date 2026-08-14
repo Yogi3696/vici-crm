@@ -3,6 +3,10 @@
         {{ __('Campaigns') }}
     </x-slot>
 
+    <x-slot name="subheader">
+        {{ __('Dialer campaigns and their inbound group mappings.') }}
+    </x-slot>
+
     <form action="{{ route('campaigns.index') }}" method="GET" class="toolbar">
         <div class="toolbar-search">
             <div class="input-group">

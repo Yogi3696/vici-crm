@@ -13,14 +13,25 @@
     @include('layouts.navigation')
 
     @isset($header)
-        <div class="page-heading py-2">
+        <div class="page-heading">
             <div class="container-fluid px-4">
-                <h4 class="mb-0">{{ $header }}</h4>
+                <div class="page-heading-inner">
+                    <div class="page-heading-text">
+                        <h1>{{ $header }}</h1>
+                        @isset($subheader)
+                            <p class="page-subheading">{{ $subheader }}</p>
+                        @endisset
+                    </div>
+
+                    @isset($actions)
+                        <div class="page-heading-actions">{{ $actions }}</div>
+                    @endisset
+                </div>
             </div>
         </div>
     @endisset
 
-    <main class="flex-grow-1 py-3">
+    <main class="flex-grow-1 py-4">
         <div class="container-fluid px-4">
             @if (session('status'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">

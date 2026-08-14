@@ -3,6 +3,10 @@
         {{ __('Leads') }}
     </x-slot>
 
+    <x-slot name="subheader">
+        {{ __('Browse and filter leads across all lists.') }}
+    </x-slot>
+
     <form action="{{ route('leads.index') }}" method="GET" class="toolbar">
         <div class="toolbar-search">
             <div class="input-group">
