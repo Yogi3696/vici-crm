@@ -309,6 +309,12 @@ body {
     color: $secondary;
 }
 
+.cell-mono {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.825rem;
+    color: $navy-800;
+}
+
 // Status + tag pills --------------------------------------------------------
 .pill {
     display: inline-flex;
@@ -338,6 +344,13 @@ body {
 .pill-inactive {
     background-color: rgba($navy-900, 0.06);
     color: $secondary;
+}
+
+// Neutral status pill for codes without a fixed active/inactive meaning
+.pill-status {
+    background-color: rgba($navy-900, 0.05);
+    color: $navy-800;
+    border: 1px solid rgba($navy-900, 0.08);
 }
 
 // Clickable tag referencing a related record

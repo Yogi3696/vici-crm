@@ -24,6 +24,8 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
+    Route::get('/leads', [\App\Http\Controllers\LeadController::class, 'index'])->name('leads.index');
+
     Route::get('/campaigns', [\App\Http\Controllers\CampaignController::class, 'index'])->name('campaigns.index');
     Route::get('/inbound-groups', [\App\Http\Controllers\InboundGroupController::class, 'index'])->name('inbound-groups.index');
 

@@ -61,20 +61,39 @@ class Lead extends Model
         return $name !== '' ? $name : '';
     }
 
+    /**
+     * Match by prefix rather than substring: a leading wildcard cannot use an
+     * index, and the table runs to six figures. Only phone_number is indexed
+     * among the searchable columns, so a digits-only term queries it alone and
+     * stays a range scan; a text term still scans, as the name and email
+     * columns carry no index.
+     */
     public function scopeSearch($query, ?string $term)
     {
-        if (! $term) {
+        $term = trim((string) $term);
+
+        if ($term === '') {
             return $query;
         }
 
-        return $query->where(function ($q) use ($term) {
-            $q->where('lead_id', 'like', "%{$term}%")
-              ->orWhere('first_name', 'like', "%{$term}%")
-              ->orWhere('last_name', 'like', "%{$term}%")
-              ->orWhere('phone_number', 'like', "%{$term}%")
-              ->orWhere('alt_phone', 'like', "%{$term}%")
-              ->orWhere('email', 'like', "%{$term}%")
-              ->orWhere('vendor_lead_code', 'like', "%{$term}%");
+        $digits = preg_replace('/\D/', '', $term);
+
+        // A digits-only term is treated as a phone prefix and nothing else:
+        // OR-ing in unindexed columns makes MySQL abandon the phone_number
+        // index and scan the whole table.
+        if ($digits !== '' && $digits === $term) {
+            return $query->where('phone_number', 'like', "{$digits}%");
+        }
+
+        return $query->where(function ($q) use ($term, $digits) {
+            $q->where('first_name', 'like', "{$term}%")
+              ->orWhere('last_name', 'like', "{$term}%")
+              ->orWhere('email', 'like', "{$term}%")
+              ->orWhere('vendor_lead_code', 'like', "{$term}%");
+
+            if ($digits !== '') {
+                $q->orWhere('phone_number', 'like', "{$digits}%");
+            }
         });
     }
 
