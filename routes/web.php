@@ -26,6 +26,10 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/leads', [\App\Http\Controllers\LeadController::class, 'index'])->name('leads.index');
 
+    Route::get('/leads/upload', [\App\Http\Controllers\LeadImportController::class, 'create'])->name('leads.import.create');
+    Route::post('/leads/upload', [\App\Http\Controllers\LeadImportController::class, 'preview'])->name('leads.import.preview');
+    Route::post('/leads/upload/confirm', [\App\Http\Controllers\LeadImportController::class, 'store'])->name('leads.import.store');
+
     Route::get('/campaigns', [\App\Http\Controllers\CampaignController::class, 'index'])->name('campaigns.index');
     Route::get('/inbound-groups', [\App\Http\Controllers\InboundGroupController::class, 'index'])->name('inbound-groups.index');
 

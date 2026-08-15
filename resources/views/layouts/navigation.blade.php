@@ -19,11 +19,18 @@
                         <i class="bi bi-speedometer2 me-1"></i>{{ __('Dashboard') }}
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('leads.*') ? 'active' : '' }}"
-                       href="{{ route('leads.index') }}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('leads.*') ? 'active' : '' }}" href="#" id="leadsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-people me-1"></i>{{ __('Leads') }}
                     </a>
+                    <ul class="dropdown-menu" aria-labelledby="leadsDropdown">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('leads.index') ? 'active' : '' }}" href="{{ route('leads.index') }}">{{ __('All Leads') }}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('leads.import.*') ? 'active' : '' }}" href="{{ route('leads.import.create') }}">{{ __('Upload Leads') }}</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->routeIs('campaigns.*') || request()->routeIs('inbound-groups.*') ? 'active' : '' }}" href="#" id="campaignsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -7,6 +7,12 @@
         {{ __('Browse and filter leads across all lists.') }}
     </x-slot>
 
+    <x-slot name="actions">
+        <a href="{{ route('leads.import.create') }}" class="btn btn-primary">
+            <i class="bi bi-upload me-1"></i>{{ __('Upload Leads') }}
+        </a>
+    </x-slot>
+
     <form action="{{ route('leads.index') }}" method="GET" class="toolbar">
         <div class="toolbar-search">
             <div class="input-group input-group-search">
