@@ -24,6 +24,12 @@
             {{ optional($list)->list_name ?: __('List #:id', ['id' => optional($list)->list_id]) }}
         </span>
 
+        <span class="pill pill-status">{{ __('Status: :status', ['status' => $status]) }}</span>
+
+        @if ($dialable)
+            <span class="pill pill-active"><span class="pill-dot"></span>{{ __('Dialable') }}</span>
+        @endif
+
         <div class="toolbar-spacer"></div>
 
         <div class="toolbar-count">

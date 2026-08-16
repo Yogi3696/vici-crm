@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Lead;
 use App\Models\VicidialList;
+use App\Models\VicidialStatus;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -54,6 +56,7 @@ class LeadImportController extends Controller
     {
         return view('leads.import.create', [
             'lists' => $this->lists(),
+            'statuses' => $this->statuses(),
         ]);
     }
 
@@ -69,8 +72,11 @@ class LeadImportController extends Controller
             'list_id' => ['required', 'integer', 'exists:vicidial_lists,list_id'],
             'delimiter' => ['required', 'in:comma,semicolon,tab,pipe'],
             'has_header' => ['nullable', 'boolean'],
-            'status' => ['nullable', 'string', 'max:6'],
+            'status' => ['required', 'string', 'max:6', Rule::in($this->statuses()->pluck('status'))],
             'duplicate_check' => ['nullable', 'in:none,list,all'],
+            'reset_dialable' => ['nullable', 'boolean'],
+            'skip_invalid_phone' => ['nullable', 'boolean'],
+            'phone_code' => ['nullable', 'string', 'max:10'],
         ]);
 
         $this->pruneAbandoned();
@@ -96,8 +102,11 @@ class LeadImportController extends Controller
             'list_id' => (int) $data['list_id'],
             'delimiter' => $data['delimiter'],
             'has_header' => $hasHeader,
-            'status' => $data['status'] ?: 'NEW',
+            'status' => $data['status'],
             'duplicate_check' => $data['duplicate_check'] ?? 'none',
+            'reset_dialable' => (bool) ($data['reset_dialable'] ?? false),
+            'skip_invalid_phone' => (bool) ($data['skip_invalid_phone'] ?? false),
+            'phone_code' => trim((string) ($data['phone_code'] ?? '')),
             'columns' => count($rows[0]),
         ]);
 
@@ -110,6 +119,8 @@ class LeadImportController extends Controller
             'list' => VicidialList::find($data['list_id']),
             'fields' => $this->fields(),
             'guesses' => $this->guessMapping($header),
+            'status' => $data['status'],
+            'dialable' => (bool) ($data['reset_dialable'] ?? false),
         ]);
     }
 
@@ -141,28 +152,23 @@ class LeadImportController extends Controller
                 ->withErrors(['mapping' => __('One column must be mapped to Phone Number.')]);
         }
 
-        $result = $this->import(
-            storage_path('app/'.$meta['path']),
-            $this->delimiter($meta['delimiter']),
-            $meta['has_header'],
-            $mapping,
-            $meta['list_id'],
-            $meta['status'],
-            $meta['duplicate_check'],
-        );
+        $result = $this->import(storage_path('app/'.$meta['path']), $mapping, $meta);
 
         Storage::delete($meta['path']);
         session()->forget('lead_import');
 
-        $message = __(':imported leads imported into :list.', [
+        $message = __(':imported leads imported into :list with status :status.', [
             'imported' => number_format($result['imported']),
             'list' => optional(VicidialList::find($meta['list_id']))->list_name ?: $meta['list_id'],
+            'status' => $meta['status'],
         ]);
 
-        if ($result['skipped']) {
-            $message .= ' '.__(':skipped rows skipped (no phone number or duplicate).', [
-                'skipped' => number_format($result['skipped']),
-            ]);
+        foreach (['no_phone' => __(':n rows had no phone number.'),
+                  'invalid_phone' => __(':n rows had an invalid phone number.'),
+                  'duplicate' => __(':n rows were duplicates.')] as $key => $line) {
+            if ($result[$key]) {
+                $message .= ' '.str_replace(':n', number_format($result[$key]), $line);
+            }
         }
 
         return redirect()
@@ -202,23 +208,17 @@ class LeadImportController extends Controller
         return [$rows, $total];
     }
 
-    private function import(
-        string $path,
-        string $delimiter,
-        bool $hasHeader,
-        array $mapping,
-        int $listId,
-        string $status,
-        string $duplicateCheck
-    ): array {
+    private function import(string $path, array $mapping, array $meta): array
+    {
         $handle = fopen($path, 'r');
 
+        $result = ['imported' => 0, 'no_phone' => 0, 'invalid_phone' => 0, 'duplicate' => 0];
+
         if ($handle === false) {
-            return ['imported' => 0, 'skipped' => 0];
+            return $result;
         }
 
-        $imported = 0;
-        $skipped = 0;
+        $delimiter = $this->delimiter($meta['delimiter']);
         $batch = [];
         $first = true;
         $now = Carbon::now();
@@ -231,20 +231,21 @@ class LeadImportController extends Controller
             if ($first) {
                 $first = false;
 
-                if ($hasHeader) {
+                if ($meta['has_header']) {
                     continue;
                 }
             }
 
-            $lead = $this->buildRow($row, $mapping, $listId, $status, $now);
+            $lead = $this->buildRow($row, $mapping, $meta, $now);
 
-            if ($lead === null) {
-                $skipped++;
+            if (! is_array($lead)) {
+                $result[$lead]++; // 'no_phone' or 'invalid_phone'
                 continue;
             }
 
-            if ($duplicateCheck !== 'none' && $this->isDuplicate($lead['phone_number'], $listId, $duplicateCheck)) {
-                $skipped++;
+            if ($meta['duplicate_check'] !== 'none'
+                && $this->isDuplicate($lead['phone_number'], $meta['list_id'], $meta['duplicate_check'])) {
+                $result['duplicate']++;
                 continue;
             }
 
@@ -252,30 +253,32 @@ class LeadImportController extends Controller
 
             if (count($batch) >= self::CHUNK) {
                 Lead::insert($batch);
-                $imported += count($batch);
+                $result['imported'] += count($batch);
                 $batch = [];
             }
         }
 
         if ($batch !== []) {
             Lead::insert($batch);
-            $imported += count($batch);
+            $result['imported'] += count($batch);
         }
 
         fclose($handle);
 
-        return ['imported' => $imported, 'skipped' => $skipped];
+        return $result;
     }
 
     /**
-     * Turns one CSV row into an insertable attribute array, or null when it
-     * carries no digits in the phone column.
+     * Turns one CSV row into an insertable attribute array, or returns a string
+     * reason ('no_phone' / 'invalid_phone') when the row cannot be dialled.
      *
      * Every mapped column is present on every row, blank cells included: a
      * batch insert builds one statement from the first row's keys, so a row
      * that omitted its empty columns would shift the values out of alignment.
+     *
+     * @return array|string
      */
-    private function buildRow(array $row, array $mapping, int $listId, string $status, Carbon $now): ?array
+    private function buildRow(array $row, array $mapping, array $meta, Carbon $now)
     {
         $lead = [];
 
@@ -288,18 +291,34 @@ class LeadImportController extends Controller
         }
 
         if (empty($lead['phone_number'])) {
-            return null;
+            return 'no_phone';
         }
 
-        return array_merge($lead, [
-            'list_id' => $listId,
-            'entry_list_id' => $listId,
-            'status' => $status,
+        // Vicidial will not dial a number it cannot place: the column holds 18
+        // digits, and anything under 7 is a fragment rather than a number.
+        if ($meta['skip_invalid_phone']
+            && (strlen($lead['phone_number']) < 7 || strlen($lead['phone_number']) > 18)) {
+            return 'invalid_phone';
+        }
+
+        $lead = array_merge($lead, [
+            'list_id' => $meta['list_id'],
+            'entry_list_id' => $meta['list_id'],
+            'status' => $meta['status'],
             'entry_date' => $now,
             'modify_date' => $now,
             'called_count' => 0,
-            'called_since_last_reset' => 'N',
+            // Leaving this 'N' is what makes a lead dialable on the next pass;
+            // 'Y' would park it until the list is reset.
+            'called_since_last_reset' => $meta['reset_dialable'] ? 'N' : 'Y',
         ]);
+
+        // A file-supplied phone_code wins; the fallback only fills the gap.
+        if ($meta['phone_code'] !== '' && empty($lead['phone_code'])) {
+            $lead['phone_code'] = $meta['phone_code'];
+        }
+
+        return $lead;
     }
 
     private function isDuplicate(string $phone, int $listId, string $scope): bool
@@ -414,5 +433,18 @@ class LeadImportController extends Controller
     private function lists()
     {
         return VicidialList::orderBy('list_name')->get(['list_id', 'list_name']);
+    }
+
+    /**
+     * Statuses offered for freshly imported leads. NEW leads a list, so it is
+     * pinned to the top; the rest follow alphabetically for the cases where a
+     * file is loaded already-dispositioned.
+     */
+    private function statuses()
+    {
+        return VicidialStatus::orderBy('status')
+            ->get(['status', 'status_name'])
+            ->sortBy(fn ($s) => $s->status === 'NEW' ? '' : $s->status)
+            ->values();
     }
 }

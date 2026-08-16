@@ -28,6 +28,17 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Pagination\Paginator::defaultView('pagination.bootstrap-5');
         \Illuminate\Pagination\Paginator::defaultSimpleView('pagination.simple-bootstrap-5');
 
+        // @selected and @checked ship with Laravel 9; on 8 they pass through as
+        // literal text and silently leave every option unselected. Backported
+        // here so the views can read the same as they would on a current release.
+        \Illuminate\Support\Facades\Blade::directive('selected', function ($expression) {
+            return "<?php if ($expression): echo 'selected'; endif; ?>";
+        });
+
+        \Illuminate\Support\Facades\Blade::directive('checked', function ($expression) {
+            return "<?php if ($expression): echo 'checked'; endif; ?>";
+        });
+
         \Illuminate\Support\Facades\Blade::directive('vite', function ($expression) {
             return "<?php
                 \$assets = $expression;
