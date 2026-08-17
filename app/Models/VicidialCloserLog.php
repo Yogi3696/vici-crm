@@ -14,4 +14,12 @@ class VicidialCloserLog extends Model
     public $timestamps = false;
     
     protected $guarded = [];
+
+    /**
+     * Get the status associated with the closer log.
+     */
+    public function vicidialStatus()
+    {
+        return $this->belongsTo(VicidialStatus::class, 'status', 'status');
+    }
 }
