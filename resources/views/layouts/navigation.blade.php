@@ -45,6 +45,16 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('call-logs.*') ? 'active' : '' }}" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-file-earmark-bar-graph me-1"></i>{{ __('Reports') }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="reportsDropdown">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('call-logs.incoming') ? 'active' : '' }}" href="{{ route('call-logs.incoming') }}">{{ __('Incoming Call Logs') }}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="navbar-nav">

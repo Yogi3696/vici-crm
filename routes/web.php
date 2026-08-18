@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/campaigns', [\App\Http\Controllers\CampaignController::class, 'index'])->name('campaigns.index');
     Route::get('/inbound-groups', [\App\Http\Controllers\InboundGroupController::class, 'index'])->name('inbound-groups.index');
 
+    Route::get('/call-logs/incoming', [\App\Http\Controllers\CallLogController::class, 'incoming'])->name('call-logs.incoming');
+
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
