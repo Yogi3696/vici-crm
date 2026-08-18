@@ -9,6 +9,8 @@ class VicidialStatus extends Model
 {
     use HasFactory;
 
+    protected $connection = 'asterisk';
+
     protected $table = 'vicidial_statuses';
     protected $primaryKey = 'status';
     protected $keyType = 'string';

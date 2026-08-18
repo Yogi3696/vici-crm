@@ -11,6 +11,8 @@ class VicidialList extends Model
 {
     use HasFactory;
 
+    protected $connection = 'asterisk';
+
     protected $table = 'vicidial_lists';
     protected $primaryKey = 'list_id';
     public $incrementing = false;

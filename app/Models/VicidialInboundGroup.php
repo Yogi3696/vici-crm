@@ -9,6 +9,8 @@ class VicidialInboundGroup extends Model
 {
     use HasFactory;
 
+    protected $connection = 'asterisk';
+
     protected $table = 'vicidial_inbound_groups';
     protected $primaryKey = 'group_id';
     protected $keyType = 'string';

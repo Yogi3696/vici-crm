@@ -9,6 +9,8 @@ class VicidialCloserLog extends Model
 {
     use HasFactory;
 
+    protected $connection = 'asterisk';
+
     protected $table = 'vicidial_closer_log';
     protected $primaryKey = 'closecallid';
     public $timestamps = false;

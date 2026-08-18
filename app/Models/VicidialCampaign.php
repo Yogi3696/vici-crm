@@ -9,6 +9,8 @@ class VicidialCampaign extends Model
 {
     use HasFactory;
 
+    protected $connection = 'asterisk';
+
     protected $table = 'vicidial_campaigns';
     protected $primaryKey = 'campaign_id';
     protected $keyType = 'string';

@@ -10,6 +10,8 @@ class Lead extends Model
 {
     use HasFactory;
 
+    protected $connection = 'asterisk';
+
     protected $table = 'vicidial_list';
     protected $primaryKey = 'lead_id';
 
