@@ -1,73 +1,94 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="h4 font-weight-bold text-dark mb-0">
-            {{ __('Incoming Call Logs') }}
-        </h2>
+        {{ __('Incoming Call Logs') }}
     </x-slot>
 
-    <div class="container-fluid py-4">
-        <div class="card shadow-sm border-primary" style="border-radius: 0.5rem;">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <form action="{{ route('call-logs.incoming') }}" method="GET" class="d-flex w-100 max-w-md" style="max-width: 400px;">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Search by phone, campaign..." value="{{ $search }}">
-                        <button class="btn btn-outline-primary" type="submit">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light text-muted">
-                            <tr>
-                                <th>Date / Time</th>
-                                <th>Phone Number</th>
-                                <th>Lead ID</th>
-                                <th>Campaign</th>
-                                <th>List ID</th>
-                                <th>Length (s)</th>
-                                <th>Status</th>
-                                <th>User</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($logs as $log)
-                                <tr>
-                                    <td>{{ $log->call_date }}</td>
-                                    <td>{{ $log->phone_number }}</td>
-                                    <td>{{ $log->lead_id }}</td>
-                                    <td>{{ $log->campaign_id }}</td>
-                                    <td>{{ $log->list_id }}</td>
-                                    <td>{{ $log->length_in_sec }}</td>
-                                    <td>
-                                        <span class="badge bg-secondary">
-                                            {{ $log->status }}
-                                        </span>
-                                        @if($log->vicidialStatus)
-                                            <small class="text-muted d-block">{{ $log->vicidialStatus->status_name }}</small>
-                                        @endif
-                                    </td>
-                                    <td>{{ $log->user }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="text-center text-muted py-4">
-                                        No incoming call logs found.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+    <x-slot name="subheader">
+        {{ __('Browse and filter incoming call logs.') }}
+    </x-slot>
 
-                @if($logs->hasPages())
-                    <div class="mt-4">
-                        {{ $logs->links() }}
-                    </div>
-                @endif
+    <form action="{{ route('call-logs.incoming') }}" method="GET" class="toolbar">
+        <div class="toolbar-search">
+            <div class="input-group input-group-search">
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" name="search" class="form-control ps-0"
+                       placeholder="{{ __('Search by phone, campaign...') }}" value="{{ $search }}">
             </div>
         </div>
+
+        <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
+
+        @if($search)
+            <a href="{{ route('call-logs.incoming') }}" class="btn btn-outline-secondary">{{ __('Clear') }}</a>
+        @endif
+
+        <div class="toolbar-spacer"></div>
+
+        <div class="toolbar-count">
+            {{ number_format($logs->total()) }} {{ Str::plural('log', $logs->total()) }}
+        </div>
+    </form>
+
+    <div class="card card-table">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Date / Time') }}</th>
+                            <th>{{ __('Phone Number') }}</th>
+                            <th>{{ __('Lead ID') }}</th>
+                            <th>{{ __('Campaign') }}</th>
+                            <th>{{ __('List ID') }}</th>
+                            <th>{{ __('Length (s)') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('User') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($logs as $log)
+                            <tr>
+                                <td class="text-secondary">{{ $log->call_date }}</td>
+                                <td>
+                                    <span class="cell-mono">{{ $log->phone_number }}</span>
+                                </td>
+                                <td>#{{ $log->lead_id }}</td>
+                                <td>
+                                    <span class="pill pill-tag">{{ $log->campaign_id }}</span>
+                                </td>
+                                <td>
+                                    <span class="pill pill-tag">{{ $log->list_id }}</span>
+                                </td>
+                                <td class="text-end text-secondary">{{ $log->length_in_sec }}</td>
+                                <td>
+                                    <span class="pill pill-status" title="{{ $log->status }}">
+                                        {{ $log->vicidialStatus ? $log->vicidialStatus->status_name : $log->status }}
+                                    </span>
+                                </td>
+                                <td>{{ $log->user }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon"><i class="bi bi-telephone-inbound"></i></div>
+                                        <p class="empty-title">{{ __('No call logs found') }}</p>
+                                        <p class="empty-text">{{ __('Try adjusting your search.') }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        @if($logs->hasPages())
+            <div class="card-footer">
+                {{ $logs->links() }}
+            </div>
+        @endif
     </div>
 </x-app-layout>
