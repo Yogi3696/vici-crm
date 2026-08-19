@@ -18,9 +18,31 @@
             </div>
         </div>
 
+        <div class="toolbar-filter">
+            <select name="status" class="form-select" onchange="this.form.submit()">
+                <option value="">{{ __('All statuses') }}</option>
+                @foreach ($statuses as $option)
+                    <option value="{{ $option['status'] }}" @selected($status === $option['status'])>
+                        {{ $option['label'] }} ({{ number_format($option['total']) }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="toolbar-filter">
+            <select name="campaign_id" class="form-select" onchange="this.form.submit()">
+                <option value="">{{ __('All campaigns') }}</option>
+                @foreach ($campaigns as $campaign)
+                    <option value="{{ $campaign->campaign_id }}" @selected((string) $campaignId === (string) $campaign->campaign_id)>
+                        {{ $campaign->campaign_name ?: $campaign->campaign_id }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
 
-        @if($search)
+        @if($search || $status || $campaignId)
             <a href="{{ route('call-logs.incoming') }}" class="btn btn-outline-secondary">{{ __('Clear') }}</a>
         @endif
 
