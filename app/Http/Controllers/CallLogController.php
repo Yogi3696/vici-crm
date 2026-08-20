@@ -14,6 +14,8 @@ class CallLogController extends Controller
         $search = $request->input('search');
         $status = $request->input('status');
         $campaignId = $request->input('campaign_id');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
 
         $query = VicidialCloserLog::with('vicidialStatus');
 
@@ -35,9 +37,17 @@ class CallLogController extends Controller
             $query->where('campaign_id', $campaignId);
         }
 
+        if ($fromDate) {
+            $query->where('call_date', '>=', $fromDate . ' 00:00:00');
+        }
+
+        if ($toDate) {
+            $query->where('call_date', '<=', $toDate . ' 23:59:59');
+        }
+
         $logs = $query->orderBy('call_date', 'desc')
                       ->paginate(15)
-                      ->appends($request->only('search', 'status', 'campaign_id'));
+                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date'));
 
         $campaigns = VicidialCampaign::orderBy('campaign_name')->get(['campaign_id', 'campaign_name']);
 
@@ -54,6 +64,6 @@ class CallLogController extends Controller
                 'total' => $row->total,
             ]);
 
-        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'campaigns', 'statuses'));
+        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'campaigns', 'statuses'));
     }
 }

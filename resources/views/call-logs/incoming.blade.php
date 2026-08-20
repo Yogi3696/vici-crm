@@ -40,9 +40,21 @@
             </select>
         </div>
 
+        <div class="toolbar-filter">
+            <input type="date" name="from_date" class="form-control"
+                   title="{{ __('Call date from') }}" placeholder="{{ __('From') }}"
+                   value="{{ $fromDate }}" max="{{ $toDate }}">
+        </div>
+
+        <div class="toolbar-filter">
+            <input type="date" name="to_date" class="form-control"
+                   title="{{ __('Call date to') }}" placeholder="{{ __('To') }}"
+                   value="{{ $toDate }}" min="{{ $fromDate }}">
+        </div>
+
         <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
 
-        @if($search || $status || $campaignId)
+        @if($search || $status || $campaignId || $fromDate || $toDate)
             <a href="{{ route('call-logs.incoming') }}" class="btn btn-outline-secondary">{{ __('Clear') }}</a>
         @endif
 
