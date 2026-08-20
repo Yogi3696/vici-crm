@@ -16,6 +16,7 @@ class CallLogController extends Controller
         $campaignId = $request->input('campaign_id');
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
+        $missed = $request->input('missed');
 
         $query = VicidialCloserLog::with('vicidialStatus');
 
@@ -45,9 +46,18 @@ class CallLogController extends Controller
             $query->where('call_date', '<=', $toDate . ' 23:59:59');
         }
 
+        if ($missed === 'yes') {
+            $query->missed();
+        } elseif ($missed === 'no') {
+            $query->answered();
+        }
+
+        // Count missed calls under the current filters, before pagination.
+        $missedCount = (clone $query)->missed()->count();
+
         $logs = $query->orderBy('call_date', 'desc')
                       ->paginate(15)
-                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date'));
+                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date', 'missed'));
 
         $campaigns = VicidialCampaign::orderBy('campaign_name')->get(['campaign_id', 'campaign_name']);
 
@@ -64,6 +74,6 @@ class CallLogController extends Controller
                 'total' => $row->total,
             ]);
 
-        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'campaigns', 'statuses'));
+        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'missed', 'missedCount', 'campaigns', 'statuses'));
     }
 }

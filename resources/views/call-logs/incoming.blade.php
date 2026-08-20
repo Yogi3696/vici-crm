@@ -41,6 +41,14 @@
         </div>
 
         <div class="toolbar-filter">
+            <select name="missed" class="form-select" onchange="this.form.submit()">
+                <option value="">{{ __('All calls') }}</option>
+                <option value="yes" @selected($missed === 'yes')>{{ __('Missed only') }}</option>
+                <option value="no" @selected($missed === 'no')>{{ __('Answered only') }}</option>
+            </select>
+        </div>
+
+        <div class="toolbar-filter">
             <input type="date" name="from_date" class="form-control"
                    title="{{ __('Call date from') }}" placeholder="{{ __('From') }}"
                    value="{{ $fromDate }}" max="{{ $toDate }}">
@@ -54,7 +62,7 @@
 
         <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
 
-        @if($search || $status || $campaignId || $fromDate || $toDate)
+        @if($search || $status || $campaignId || $fromDate || $toDate || $missed)
             <a href="{{ route('call-logs.incoming') }}" class="btn btn-outline-secondary">{{ __('Clear') }}</a>
         @endif
 
@@ -62,6 +70,9 @@
 
         <div class="toolbar-count">
             {{ number_format($logs->total()) }} {{ Str::plural('log', $logs->total()) }}
+            @if($missedCount)
+                &middot; <span class="text-danger">{{ number_format($missedCount) }} {{ __('missed') }}</span>
+            @endif
         </div>
     </form>
 
@@ -100,6 +111,9 @@
                                     <span class="pill pill-status" title="{{ $log->status }}">
                                         {{ $log->vicidialStatus ? $log->vicidialStatus->status_name : $log->status }}
                                     </span>
+                                    @if($log->is_missed)
+                                        <span class="pill pill-missed">{{ __('Missed') }}</span>
+                                    @endif
                                 </td>
                                 <td>{{ $log->user }}</td>
                             </tr>

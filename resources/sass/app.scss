@@ -528,6 +528,12 @@ body {
     }
 }
 
+// Inbound call that never reached an agent
+.pill-missed {
+    background-color: rgba(#dc2626, 0.1);
+    color: #b91c1c;
+}
+
 .pill-muted {
     color: $secondary;
     font-size: 0.8rem;
