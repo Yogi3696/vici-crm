@@ -33,6 +33,21 @@ class VicidialCloserLog extends Model
     ];
 
     /**
+     * Vicidial's placeholder user for inbound calls that no agent ever took.
+     * Not a real agent, so it is offered as its own filter option.
+     */
+    public const NO_AGENT_USER = 'VDCL';
+
+    /**
+     * Limit the query to one agent. Vicidial stores the no-agent placeholder
+     * in the same column, so NO_AGENT_USER works here too.
+     */
+    public function scopeForAgent($query, string $user)
+    {
+        return $query->where('user', $user);
+    }
+
+    /**
      * Limit the query to calls that were never handled by an agent.
      */
     public function scopeMissed($query)
@@ -49,6 +64,14 @@ class VicidialCloserLog extends Model
     }
 
     /**
+     * Whether this call was never picked up by a real agent.
+     */
+    public function getHasNoAgentAttribute(): bool
+    {
+        return $this->user === self::NO_AGENT_USER;
+    }
+
+    /**
      * Whether this call counts as missed.
      */
     public function getIsMissedAttribute(): bool
@@ -62,5 +85,13 @@ class VicidialCloserLog extends Model
     public function vicidialStatus()
     {
         return $this->belongsTo(VicidialStatus::class, 'status', 'status');
+    }
+
+    /**
+     * Get the agent that handled the call.
+     */
+    public function vicidialUser()
+    {
+        return $this->belongsTo(VicidialUser::class, 'user', 'user');
     }
 }

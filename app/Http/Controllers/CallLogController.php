@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\VicidialCloserLog;
 use App\Models\VicidialStatus;
 use App\Models\VicidialCampaign;
+use App\Models\VicidialUser;
 
 class CallLogController extends Controller
 {
@@ -17,6 +18,7 @@ class CallLogController extends Controller
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
         $missed = $request->input('missed');
+        $agent = $request->input('agent');
 
         $query = VicidialCloserLog::with('vicidialStatus');
 
@@ -46,6 +48,10 @@ class CallLogController extends Controller
             $query->where('call_date', '<=', $toDate . ' 23:59:59');
         }
 
+        if ($agent) {
+            $query->forAgent($agent);
+        }
+
         if ($missed === 'yes') {
             $query->missed();
         } elseif ($missed === 'no') {
@@ -57,7 +63,7 @@ class CallLogController extends Controller
 
         $logs = $query->orderBy('call_date', 'desc')
                       ->paginate(15)
-                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date', 'missed'));
+                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date', 'missed', 'agent'));
 
         $campaigns = VicidialCampaign::orderBy('campaign_name')->get(['campaign_id', 'campaign_name']);
 
@@ -74,6 +80,26 @@ class CallLogController extends Controller
                 'total' => $row->total,
             ]);
 
-        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'missed', 'missedCount', 'campaigns', 'statuses'));
+        $userNames = VicidialUser::pluck('full_name', 'user');
+
+        $agents = VicidialCloserLog::selectRaw('user, count(*) as total')
+            ->whereNotNull('user')
+            ->where('user', '!=', '')
+            ->where('user', '!=', VicidialCloserLog::NO_AGENT_USER)
+            ->groupBy('user')
+            ->orderBy('user')
+            ->get()
+            ->map(fn ($row) => [
+                'user' => $row->user,
+                // full_name often just repeats the extension; only add it when it differs.
+                'label' => ($userNames[$row->user] ?? '') && $userNames[$row->user] !== $row->user
+                    ? $userNames[$row->user] . ' (' . $row->user . ')'
+                    : $row->user,
+                'total' => $row->total,
+            ]);
+
+        $noAgentTotal = VicidialCloserLog::where('user', VicidialCloserLog::NO_AGENT_USER)->count();
+
+        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'missed', 'missedCount', 'agent', 'agents', 'noAgentTotal', 'campaigns', 'statuses'));
     }
 }

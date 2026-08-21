@@ -41,6 +41,23 @@
         </div>
 
         <div class="toolbar-filter">
+            <select name="agent" class="form-select" onchange="this.form.submit()">
+                <option value="">{{ __('All agents') }}</option>
+                @foreach ($agents as $option)
+                    <option value="{{ $option['user'] }}" @selected((string) $agent === (string) $option['user'])>
+                        {{ $option['label'] }} ({{ number_format($option['total']) }})
+                    </option>
+                @endforeach
+                @if($noAgentTotal)
+                    <option value="{{ App\Models\VicidialCloserLog::NO_AGENT_USER }}"
+                            @selected($agent === App\Models\VicidialCloserLog::NO_AGENT_USER)>
+                        {{ __('No agent (unhandled)') }} ({{ number_format($noAgentTotal) }})
+                    </option>
+                @endif
+            </select>
+        </div>
+
+        <div class="toolbar-filter">
             <select name="missed" class="form-select" onchange="this.form.submit()">
                 <option value="">{{ __('All calls') }}</option>
                 <option value="yes" @selected($missed === 'yes')>{{ __('Missed only') }}</option>
@@ -62,7 +79,7 @@
 
         <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
 
-        @if($search || $status || $campaignId || $fromDate || $toDate || $missed)
+        @if($search || $status || $campaignId || $fromDate || $toDate || $missed || $agent)
             <a href="{{ route('call-logs.incoming') }}" class="btn btn-outline-secondary">{{ __('Clear') }}</a>
         @endif
 
@@ -115,7 +132,13 @@
                                         <span class="pill pill-missed">{{ __('Missed') }}</span>
                                     @endif
                                 </td>
-                                <td>{{ $log->user }}</td>
+                                <td>
+                                    @if($log->has_no_agent)
+                                        <span class="text-secondary">{{ __('No agent') }}</span>
+                                    @else
+                                        {{ $log->user }}
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
