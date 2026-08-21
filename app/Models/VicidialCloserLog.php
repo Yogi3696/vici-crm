@@ -88,6 +88,14 @@ class VicidialCloserLog extends Model
     }
 
     /**
+     * Get the list the call belongs to.
+     */
+    public function vicidialList()
+    {
+        return $this->belongsTo(VicidialList::class, 'list_id', 'list_id');
+    }
+
+    /**
      * Get the agent that handled the call.
      */
     public function vicidialUser()

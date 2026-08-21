@@ -103,7 +103,7 @@
                             <th>{{ __('Phone Number') }}</th>
                             <th>{{ __('Lead ID') }}</th>
                             <th>{{ __('Campaign') }}</th>
-                            <th>{{ __('List ID') }}</th>
+                            <th>{{ __('List') }}</th>
                             <th>{{ __('Length (s)') }}</th>
                             <th>{{ __('Status') }}</th>
                             <th>{{ __('User') }}</th>
@@ -121,7 +121,9 @@
                                     <span class="pill pill-tag">{{ $log->campaign_id }}</span>
                                 </td>
                                 <td>
-                                    <span class="pill pill-tag">{{ $log->list_id }}</span>
+                                    <span class="pill pill-tag" title="{{ __('List ID') }}: {{ $log->list_id }}">
+                                        {{ optional($log->vicidialList)->list_name ?: $log->list_id }}
+                                    </span>
                                 </td>
                                 <td class="text-end text-secondary">{{ $log->length_in_sec }}</td>
                                 <td>

@@ -20,7 +20,7 @@ class CallLogController extends Controller
         $missed = $request->input('missed');
         $agent = $request->input('agent');
 
-        $query = VicidialCloserLog::with('vicidialStatus');
+        $query = VicidialCloserLog::with(['vicidialStatus', 'vicidialList']);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
