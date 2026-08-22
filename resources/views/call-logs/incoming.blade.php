@@ -99,14 +99,14 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>{{ __('Date / Time') }}</th>
-                            <th>{{ __('Phone Number') }}</th>
-                            <th>{{ __('Lead ID') }}</th>
-                            <th>{{ __('Campaign') }}</th>
-                            <th>{{ __('List') }}</th>
-                            <th>{{ __('Length (s)') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('User') }}</th>
+                            <x-sort-header column="call_date" :label="__('Date / Time')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="phone_number" :label="__('Phone Number')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="lead_id" :label="__('Lead ID')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="campaign_id" :label="__('Campaign')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="list_id" :label="__('List')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="length_in_sec" :label="__('Length (s)')" :sort="$sort" :direction="$direction" align="end" />
+                            <x-sort-header column="status" :label="__('Status')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="user" :label="__('User')" :sort="$sort" :direction="$direction" />
                         </tr>
                     </thead>
                     <tbody>

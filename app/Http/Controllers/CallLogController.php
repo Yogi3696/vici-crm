@@ -10,6 +10,21 @@ use App\Models\VicidialUser;
 
 class CallLogController extends Controller
 {
+    /**
+     * Sortable table columns mapped to their database column. Keeps user
+     * input out of the order by clause.
+     */
+    private const SORTABLE = [
+        'call_date' => 'call_date',
+        'phone_number' => 'phone_number',
+        'lead_id' => 'lead_id',
+        'campaign_id' => 'campaign_id',
+        'list_id' => 'list_id',
+        'length_in_sec' => 'length_in_sec',
+        'status' => 'status',
+        'user' => 'user',
+    ];
+
     public function incoming(Request $request)
     {
         $search = $request->input('search');
@@ -19,6 +34,7 @@ class CallLogController extends Controller
         $toDate = $request->input('to_date');
         $missed = $request->input('missed');
         $agent = $request->input('agent');
+        [$sort, $direction] = $this->sortFrom($request);
 
         $query = VicidialCloserLog::with(['vicidialStatus', 'vicidialList']);
 
@@ -61,9 +77,9 @@ class CallLogController extends Controller
         // Count missed calls under the current filters, before pagination.
         $missedCount = (clone $query)->missed()->count();
 
-        $logs = $query->orderBy('call_date', 'desc')
+        $logs = $query->orderBy(self::SORTABLE[$sort], $direction)
                       ->paginate(15)
-                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date', 'missed', 'agent'));
+                      ->appends($request->only('search', 'status', 'campaign_id', 'from_date', 'to_date', 'missed', 'agent', 'sort', 'direction'));
 
         $campaigns = VicidialCampaign::orderBy('campaign_name')->get(['campaign_id', 'campaign_name']);
 
@@ -100,6 +116,20 @@ class CallLogController extends Controller
 
         $noAgentTotal = VicidialCloserLog::where('user', VicidialCloserLog::NO_AGENT_USER)->count();
 
-        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'missed', 'missedCount', 'agent', 'agents', 'noAgentTotal', 'campaigns', 'statuses'));
+        return view('call-logs.incoming', compact('logs', 'search', 'status', 'campaignId', 'fromDate', 'toDate', 'missed', 'missedCount', 'agent', 'agents', 'noAgentTotal', 'campaigns', 'statuses', 'sort', 'direction'));
+    }
+
+    /**
+     * Resolve the requested sort column and direction, falling back to the
+     * newest calls first. Only whitelisted keys reach the query builder.
+     */
+    private function sortFrom(Request $request): array
+    {
+        $sort = $request->input('sort');
+        $sort = isset(self::SORTABLE[$sort]) ? $sort : 'call_date';
+
+        $direction = strtolower((string) $request->input('direction')) === 'asc' ? 'asc' : 'desc';
+
+        return [$sort, $direction];
     }
 }
