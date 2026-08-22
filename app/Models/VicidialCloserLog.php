@@ -80,6 +80,17 @@ class VicidialCloserLog extends Model
     }
 
     /**
+     * Call length as minutes and seconds, e.g. "3:07". Sorting still uses the
+     * raw length_in_sec column, so the order matches the displayed value.
+     */
+    public function getLengthInMinutesAttribute(): string
+    {
+        $seconds = (int) $this->length_in_sec;
+
+        return intdiv($seconds, 60) . ':' . str_pad($seconds % 60, 2, '0', STR_PAD_LEFT);
+    }
+
+    /**
      * Get the status associated with the closer log.
      */
     public function vicidialStatus()

@@ -104,9 +104,9 @@
                             <x-sort-header column="lead_id" :label="__('Lead ID')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="campaign_id" :label="__('Campaign')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="list_id" :label="__('List')" :sort="$sort" :direction="$direction" />
-                            <x-sort-header column="length_in_sec" :label="__('Length (s)')" :sort="$sort" :direction="$direction" align="end" />
                             <x-sort-header column="status" :label="__('Status')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="user" :label="__('User')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="length_in_sec" :label="__('Length (min)')" :sort="$sort" :direction="$direction" align="end" />
                         </tr>
                     </thead>
                     <tbody>
@@ -125,7 +125,6 @@
                                         {{ optional($log->vicidialList)->list_name ?: $log->list_id }}
                                     </span>
                                 </td>
-                                <td class="text-end text-secondary">{{ $log->length_in_sec }}</td>
                                 <td>
                                     <span class="pill pill-status" title="{{ $log->status }}">
                                         {{ $log->vicidialStatus ? $log->vicidialStatus->status_name : $log->status }}
@@ -140,6 +139,9 @@
                                     @else
                                         {{ $log->user }}
                                     @endif
+                                </td>
+                                <td class="text-end text-secondary" title="{{ $log->length_in_sec }} {{ __('seconds') }}">
+                                    <span class="cell-mono">{{ $log->length_in_minutes }}</span>
                                 </td>
                             </tr>
                         @empty
