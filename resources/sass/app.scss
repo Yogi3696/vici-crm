@@ -566,6 +566,14 @@ body {
     }
 }
 
+// Lead id, highlighted in its own column
+.cell-lead-id {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: $primary;
+}
+
 // Inbound call that never reached an agent
 .pill-missed {
     background-color: rgba(#dc2626, 0.1);

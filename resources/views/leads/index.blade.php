@@ -65,6 +65,7 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
+                            <th>{{ __('Lead ID') }}</th>
                             <th>{{ __('Lead') }}</th>
                             <th>{{ __('Phone') }}</th>
                             <th>{{ __('Status') }}</th>
@@ -77,8 +78,13 @@
                         @forelse ($leads as $lead)
                             <tr>
                                 <td>
+                                    <span class="cell-lead-id">#{{ $lead->lead_id }}</span>
+                                </td>
+                                <td>
                                     <div class="cell-title">{{ $lead->full_name ?: __('(no name)') }}</div>
-                                    <div class="cell-id">#{{ $lead->lead_id }}@if($lead->email) &middot; {{ $lead->email }}@endif</div>
+                                    @if($lead->email)
+                                        <div class="cell-id">{{ $lead->email }}</div>
+                                    @endif
                                 </td>
                                 <td>
                                     @if($lead->phone_number)
@@ -116,7 +122,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     <div class="empty-state">
                                         <div class="empty-icon"><i class="bi bi-people"></i></div>
                                         <p class="empty-title">{{ __('No leads found') }}</p>
