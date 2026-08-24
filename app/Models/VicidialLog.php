@@ -58,6 +58,13 @@ class VicidialLog extends Model
     ];
 
     /**
+     * Vicidial's placeholder user for outbound calls dialled by the auto
+     * dialer rather than an agent. Named "Outbound Auto Dial" in
+     * vicidial_users, so it is offered as its own filter option.
+     */
+    public const AUTO_DIAL_USER = 'VDAD';
+
+    /**
      * Term reasons Vicidial records when nobody on our side ended the call.
      * Constrained by the term_reason enum on the table.
      */
@@ -114,6 +121,14 @@ class VicidialLog extends Model
     public function scopeContacted($query)
     {
         return $query->whereNotIn('status', self::NO_CONTACT_STATUSES);
+    }
+
+    /**
+     * Whether the dialer placed this call rather than an agent.
+     */
+    public function getIsAutoDialAttribute(): bool
+    {
+        return $this->user === self::AUTO_DIAL_USER;
     }
 
     /**

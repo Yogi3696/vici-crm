@@ -53,6 +53,9 @@
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('call-logs.incoming') ? 'active' : '' }}" href="{{ route('call-logs.incoming') }}">{{ __('Incoming Call Logs') }}</a>
                         </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('call-logs.outgoing') ? 'active' : '' }}" href="{{ route('call-logs.outgoing') }}">{{ __('Outgoing Call Logs') }}</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

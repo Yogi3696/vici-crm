@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/inbound-groups', [\App\Http\Controllers\InboundGroupController::class, 'index'])->name('inbound-groups.index');
 
     Route::get('/call-logs/incoming', [\App\Http\Controllers\CallLogController::class, 'incoming'])->name('call-logs.incoming');
+    Route::get('/call-logs/outgoing', [\App\Http\Controllers\CallLogController::class, 'outgoing'])->name('call-logs.outgoing');
 
     Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
