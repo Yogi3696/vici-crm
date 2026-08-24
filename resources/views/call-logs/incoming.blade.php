@@ -99,9 +99,9 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
+                            <x-sort-header column="lead_id" :label="__('Lead ID')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="call_date" :label="__('Date / Time')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="phone_number" :label="__('Phone Number')" :sort="$sort" :direction="$direction" />
-                            <x-sort-header column="lead_id" :label="__('Lead ID')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="campaign_id" :label="__('Campaign')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="list_id" :label="__('List')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="status" :label="__('Status')" :sort="$sort" :direction="$direction" />
@@ -112,11 +112,18 @@
                     <tbody>
                         @forelse ($logs as $log)
                             <tr>
+                                <td>
+                                    @if($log->lead_id)
+                                        <span class="cell-lead-id">#{{ $log->lead_id }}</span>
+                                    @else
+                                        {{-- Vicidial logs 0 when the inbound call matched no lead --}}
+                                        <span class="pill-muted">&mdash;</span>
+                                    @endif
+                                </td>
                                 <td class="text-secondary">{{ $log->call_date }}</td>
                                 <td>
                                     <span class="cell-mono">{{ $log->phone_number }}</span>
                                 </td>
-                                <td>#{{ $log->lead_id }}</td>
                                 <td>
                                     <span class="pill pill-tag">{{ $log->campaign_id }}</span>
                                 </td>
