@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+upcoming.txt
 .env
 .env.*
 !.env.example
