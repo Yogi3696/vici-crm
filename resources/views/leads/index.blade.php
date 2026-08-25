@@ -65,13 +65,13 @@
                 <table class="table table-hover align-middle">
                     <thead>
                         <tr>
-                            <th>{{ __('Lead ID') }}</th>
-                            <th>{{ __('Lead') }}</th>
-                            <th>{{ __('Phone') }}</th>
-                            <th>{{ __('Status') }}</th>
-                            <th>{{ __('List') }}</th>
-                            <th class="text-end">{{ __('Calls') }}</th>
-                            <th>{{ __('Last Modified') }}</th>
+                            <x-sort-header column="lead_id" :label="__('Lead ID')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="name" :label="__('Lead')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="phone_number" :label="__('Phone')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="status" :label="__('Status')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="list_id" :label="__('List')" :sort="$sort" :direction="$direction" />
+                            <x-sort-header column="called_count" :label="__('Calls')" :sort="$sort" :direction="$direction" align="end" />
+                            <x-sort-header column="modify_date" :label="__('Last Modified')" :sort="$sort" :direction="$direction" />
                         </tr>
                     </thead>
                     <tbody>
