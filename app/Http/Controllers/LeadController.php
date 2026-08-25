@@ -21,6 +21,7 @@ class LeadController extends Controller
         'status' => 'status',
         'list_id' => 'list_id',
         'called_count' => 'called_count',
+        'entry_date' => 'entry_date',
         'modify_date' => 'modify_date',
     ];
 
@@ -29,15 +30,18 @@ class LeadController extends Controller
         $search = $request->input('search');
         $status = $request->input('status');
         $listId = $request->input('list_id');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
         [$sort, $direction] = $this->sortFrom($request);
 
         $leads = Lead::with(['list', 'statusDetail'])
             ->search($search)
             ->status($status)
             ->forList($listId)
+            ->entryDateBetween($fromDate, $toDate)
             ->tap(fn ($q) => $this->applySort($q, $sort, $direction))
             ->paginate(25)
-            ->appends($request->only('search', 'status', 'list_id', 'sort', 'direction'));
+            ->appends($request->only('search', 'status', 'list_id', 'from_date', 'to_date', 'sort', 'direction'));
 
         $lists = VicidialList::orderBy('list_name')->get(['list_id', 'list_name']);
 
@@ -55,7 +59,7 @@ class LeadController extends Controller
                 'total' => $row->total,
             ]);
 
-        return view('leads.index', compact('leads', 'search', 'status', 'listId', 'lists', 'statuses', 'sort', 'direction'));
+        return view('leads.index', compact('leads', 'search', 'status', 'listId', 'fromDate', 'toDate', 'lists', 'statuses', 'sort', 'direction'));
     }
 
     /**

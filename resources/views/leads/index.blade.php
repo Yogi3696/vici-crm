@@ -46,9 +46,21 @@
             </select>
         </div>
 
+        <div class="toolbar-filter">
+            <input type="date" name="from_date" class="form-control"
+                   title="{{ __('Entry date from') }}" placeholder="{{ __('From') }}"
+                   value="{{ $fromDate }}" max="{{ $toDate }}">
+        </div>
+
+        <div class="toolbar-filter">
+            <input type="date" name="to_date" class="form-control"
+                   title="{{ __('Entry date to') }}" placeholder="{{ __('To') }}"
+                   value="{{ $toDate }}" min="{{ $fromDate }}">
+        </div>
+
         <button class="btn btn-primary" type="submit">{{ __('Search') }}</button>
 
-        @if($search || $status || $listId)
+        @if($search || $status || $listId || $fromDate || $toDate)
             <a href="{{ route('leads.index') }}" class="btn btn-outline-secondary">{{ __('Clear') }}</a>
         @endif
 
@@ -71,6 +83,7 @@
                             <x-sort-header column="status" :label="__('Status')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="list_id" :label="__('List')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="called_count" :label="__('Calls')" :sort="$sort" :direction="$direction" align="end" />
+                            <x-sort-header column="entry_date" :label="__('Entered')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="modify_date" :label="__('Last Modified')" :sort="$sort" :direction="$direction" />
                         </tr>
                     </thead>
@@ -111,6 +124,15 @@
                                 </td>
                                 <td class="text-end text-secondary">{{ number_format($lead->called_count) }}</td>
                                 <td class="text-secondary">
+                                    @if($lead->entry_date)
+                                        <span title="{{ $lead->entry_date->toDayDateTimeString() }}">
+                                            {{ $lead->entry_date->format('d M Y, H:i') }}
+                                        </span>
+                                    @else
+                                        <span class="pill-muted">&mdash;</span>
+                                    @endif
+                                </td>
+                                <td class="text-secondary">
                                     @if($lead->modify_date)
                                         <span title="{{ $lead->modify_date->toDayDateTimeString() }}">
                                             {{ $lead->modify_date->format('d M Y, H:i') }}
@@ -122,7 +144,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7">
+                                <td colspan="8">
                                     <div class="empty-state">
                                         <div class="empty-icon"><i class="bi bi-people"></i></div>
                                         <p class="empty-title">{{ __('No leads found') }}</p>

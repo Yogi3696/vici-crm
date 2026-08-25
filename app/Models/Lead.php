@@ -110,6 +110,23 @@ class Lead extends Model
     }
 
     /**
+     * Limit the query to leads entered within an inclusive date range. Either
+     * bound may be omitted.
+     */
+    public function scopeEntryDateBetween($query, ?string $from, ?string $to)
+    {
+        if ($from) {
+            $query->where('entry_date', '>=', $from . ' 00:00:00');
+        }
+
+        if ($to) {
+            $query->where('entry_date', '<=', $to . ' 23:59:59');
+        }
+
+        return $query;
+    }
+
+    /**
      * Leads belonging to any list of the given campaign.
      */
     public function scopeForCampaign($query, ?string $campaignId)
