@@ -18,6 +18,8 @@ class VicidialList extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $guarded = [];
+
     protected $casts = [
         'list_id' => 'integer',
     ];

@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/leads', [\App\Http\Controllers\LeadController::class, 'index'])->name('leads.index');
 
     Route::get('/lists', [\App\Http\Controllers\ListController::class, 'index'])->name('lists.index');
+    Route::get('/lists/create', [\App\Http\Controllers\ListController::class, 'create'])->name('lists.create');
+    Route::post('/lists', [\App\Http\Controllers\ListController::class, 'store'])->name('lists.store');
 
     Route::get('/leads/upload', [\App\Http\Controllers\LeadImportController::class, 'create'])->name('leads.import.create');
     Route::post('/leads/upload', [\App\Http\Controllers\LeadImportController::class, 'preview'])->name('leads.import.preview');

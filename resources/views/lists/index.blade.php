@@ -8,8 +8,8 @@
     </x-slot>
 
     <x-slot name="actions">
-        <a href="{{ route('leads.import.create') }}" class="btn btn-primary">
-            <i class="bi bi-upload me-1"></i>{{ __('Upload Leads') }}
+        <a href="{{ route('lists.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>{{ __('Create New List') }}
         </a>
     </x-slot>
 
