@@ -20,12 +20,15 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('leads.*') ? 'active' : '' }}" href="#" id="leadsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('leads.*') || request()->routeIs('lists.*') ? 'active' : '' }}" href="#" id="leadsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-people me-1"></i>{{ __('Leads') }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="leadsDropdown">
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('leads.index') ? 'active' : '' }}" href="{{ route('leads.index') }}">{{ __('All Leads') }}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('lists.*') ? 'active' : '' }}" href="{{ route('lists.index') }}">{{ __('Lists') }}</a>
                         </li>
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('leads.import.*') ? 'active' : '' }}" href="{{ route('leads.import.create') }}">{{ __('Upload Leads') }}</a>

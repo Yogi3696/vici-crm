@@ -26,6 +26,8 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function () {
     Route::get('/leads', [\App\Http\Controllers\LeadController::class, 'index'])->name('leads.index');
 
+    Route::get('/lists', [\App\Http\Controllers\ListController::class, 'index'])->name('lists.index');
+
     Route::get('/leads/upload', [\App\Http\Controllers\LeadImportController::class, 'create'])->name('leads.import.create');
     Route::post('/leads/upload', [\App\Http\Controllers\LeadImportController::class, 'preview'])->name('leads.import.preview');
     Route::post('/leads/upload/confirm', [\App\Http\Controllers\LeadImportController::class, 'store'])->name('leads.import.store');
