@@ -61,6 +61,16 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('agents.*') ? 'active' : '' }}" href="#" id="agentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-headset me-1"></i>{{ __('Agents') }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="agentsDropdown">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('agents.index') ? 'active' : '' }}" href="{{ route('agents.index') }}">{{ __('Agents List') }}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="navbar-nav">
