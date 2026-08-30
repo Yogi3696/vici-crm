@@ -97,6 +97,56 @@ class ListController extends Controller
     }
 
     /**
+     * Flip a list between active and inactive. Vicidial stores the flag as Y
+     * or N, and keeps list_changedate as the audit trail for edits.
+     */
+    public function toggleActive(Request $request, VicidialList $list)
+    {
+        $list->update([
+            'active' => $list->is_active ? 'N' : 'Y',
+            'list_changedate' => now(),
+        ]);
+
+        $message = $list->is_active
+            ? __('List :name is now active.', ['name' => $list->list_name ?: $list->list_id])
+            : __('List :name is now inactive.', ['name' => $list->list_name ?: $list->list_id]);
+
+        return redirect()
+            ->to($this->safeReturnUrl($request))
+            ->with('status', $message);
+    }
+
+    /**
+     * Where to send the user after a toggle: back to the same filtered, sorted
+     * page they clicked from. The value arrives from the request, so anything
+     * that is not this application's own lists index is discarded rather than
+     * followed, which keeps it from becoming an open redirect.
+     */
+    private function safeReturnUrl(Request $request): string
+    {
+        $fallback = route('lists.index');
+        $candidate = (string) $request->input('return_to');
+
+        if ($candidate === '') {
+            return $fallback;
+        }
+
+        $parts = parse_url($candidate);
+
+        if (! is_array($parts) || ($parts['path'] ?? '') !== parse_url($fallback, PHP_URL_PATH)) {
+            return $fallback;
+        }
+
+        // Rebuild from the query string alone, so only the filter and sort
+        // parameters survive; any host, scheme or fragment is dropped.
+        parse_str($parts['query'] ?? '', $query);
+
+        return route('lists.index', array_intersect_key($query, array_flip([
+            'search', 'campaign_id', 'active', 'sort', 'direction', 'page',
+        ])));
+    }
+
+    /**
      * Resolve the requested sort column and direction, falling back to the
      * lowest list id first. Only whitelisted keys reach the query builder.
      */

@@ -545,6 +545,24 @@ body {
     color: $secondary;
 }
 
+// Status pill rendered as a button, so it can be clicked to toggle state
+.pill-toggle {
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    transition: filter 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+        filter: brightness(0.94);
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 0.15rem rgba($primary, 0.35);
+    }
+}
+
 // Neutral status pill for codes without a fixed active/inactive meaning
 .pill-status {
     background-color: rgba($navy-900, 0.05);

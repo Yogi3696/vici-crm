@@ -98,11 +98,15 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($list->is_active)
-                                        <span class="pill pill-active"><span class="pill-dot"></span>{{ __('Active') }}</span>
-                                    @else
-                                        <span class="pill pill-inactive"><span class="pill-dot"></span>{{ __('Inactive') }}</span>
-                                    @endif
+                                    <form action="{{ route('lists.toggle-active', $list) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="return_to" value="{{ request()->fullUrl() }}">
+                                        <button type="submit"
+                                                class="pill pill-toggle {{ $list->is_active ? 'pill-active' : 'pill-inactive' }}"
+                                                title="{{ $list->is_active ? __('Click to deactivate') : __('Click to activate') }}">
+                                            <span class="pill-dot"></span>{{ $list->is_active ? __('Active') : __('Inactive') }}
+                                        </button>
+                                    </form>
                                 </td>
                                 <td class="text-end">
                                     @if($list->leads_count)
