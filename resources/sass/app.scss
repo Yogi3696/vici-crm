@@ -545,22 +545,49 @@ body {
     color: $secondary;
 }
 
-// Status pill rendered as a button, so it can be clicked to toggle state
-.pill-toggle {
+// Toggle switch, submitted as a button so state changes go through POST
+.switch {
+    display: inline-flex;
+    align-items: center;
+    width: 2.25rem;
+    height: 1.25rem;
+    padding: 0.125rem;
     border: 0;
+    border-radius: 999px;
+    background-color: rgba($navy-900, 0.18);
     cursor: pointer;
-    font-family: inherit;
-    transition: filter 0.15s ease, box-shadow 0.15s ease;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    vertical-align: middle;
 
-    &:hover,
-    &:focus-visible {
-        filter: brightness(0.94);
+    &:hover {
+        background-color: rgba($navy-900, 0.28);
     }
 
     &:focus-visible {
         outline: none;
         box-shadow: 0 0 0 0.15rem rgba($primary, 0.35);
     }
+
+    &.is-on {
+        background-color: #16a34a;
+
+        &:hover {
+            background-color: darken(#16a34a, 6%);
+        }
+
+        .switch-knob {
+            transform: translateX(1rem);
+        }
+    }
+}
+
+.switch-knob {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba($navy-900, 0.25);
+    transition: transform 0.15s ease;
 }
 
 // Neutral status pill for codes without a fixed active/inactive meaning

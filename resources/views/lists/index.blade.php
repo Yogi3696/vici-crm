@@ -74,6 +74,7 @@
                             <x-sort-header column="active" :label="__('Status')" :sort="$sort" :direction="$direction" />
                             <x-sort-header column="leads_count" :label="__('Leads')" :sort="$sort" :direction="$direction" align="end" />
                             <x-sort-header column="list_lastcalldate" :label="__('Last Call')" :sort="$sort" :direction="$direction" />
+                            <th class="text-end">{{ __('Active') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,15 +99,11 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <form action="{{ route('lists.toggle-active', $list) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <input type="hidden" name="return_to" value="{{ request()->fullUrl() }}">
-                                        <button type="submit"
-                                                class="pill pill-toggle {{ $list->is_active ? 'pill-active' : 'pill-inactive' }}"
-                                                title="{{ $list->is_active ? __('Click to deactivate') : __('Click to activate') }}">
-                                            <span class="pill-dot"></span>{{ $list->is_active ? __('Active') : __('Inactive') }}
-                                        </button>
-                                    </form>
+                                    @if($list->is_active)
+                                        <span class="pill pill-active"><span class="pill-dot"></span>{{ __('Active') }}</span>
+                                    @else
+                                        <span class="pill pill-inactive"><span class="pill-dot"></span>{{ __('Inactive') }}</span>
+                                    @endif
                                 </td>
                                 <td class="text-end">
                                     @if($list->leads_count)
@@ -127,10 +124,23 @@
                                         <span class="pill-muted">{{ __('Never') }}</span>
                                     @endif
                                 </td>
+                                <td class="text-end">
+                                    <form action="{{ route('lists.toggle-active', $list) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="return_to" value="{{ request()->fullUrl() }}">
+                                        <button type="submit" role="switch"
+                                                aria-checked="{{ $list->is_active ? 'true' : 'false' }}"
+                                                @class(['switch', 'is-on' => $list->is_active])
+                                                title="{{ $list->is_active ? __('Deactivate this list') : __('Activate this list') }}"
+                                                aria-label="{{ $list->is_active ? __('Deactivate :name', ['name' => $list->list_name]) : __('Activate :name', ['name' => $list->list_name]) }}">
+                                            <span class="switch-knob"></span>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     <div class="empty-state">
                                         <div class="empty-icon"><i class="bi bi-list-ul"></i></div>
                                         <p class="empty-title">{{ __('No lists found') }}</p>
